@@ -1,0 +1,35 @@
+name: dotnet-build
+description: Restore and build a .NET project
+
+inputs:
+  DOTNET_VERSION:
+    required: true
+  BUILD_CONFIGURATION:
+    required: true     
+  APP_NAME:
+    required: true
+
+        
+runs:
+  using: composite
+  steps:
+    - name: .net setup
+      uses: actions/setup-dotnet@v5.3.0
+      continue-on-error: true
+      with:
+        dotnet-version: ${{inputs.DOTNET_VERSION}}
+        cache: true
+        cache-dependency-path: '**/packages.lock.json'
+  
+    - name: dotnet restore
+      shell: bash
+      run: dotnet restore ${{inputs.APP_NAME}}.slnx 
+  
+    - name: dotnet build 
+      shell: bash
+      run: dotnet build ${{inputs.APP_NAME}}.slnx --configuration  ${{inputs.BUILD_CONFIGURATION}} --no-restore
+  
+
+
+
+  

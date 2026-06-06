@@ -1,0 +1,49 @@
+on:
+  workflow_call:
+    inputs:
+      DOTNET_VERSION:
+        type: string
+        required: true
+      BUILD_CONFIGURATION:
+        type: string
+        required: true     
+      ARTIFACT_NAME:
+        type: string
+        required: true
+      APP_NAME:
+        type: string
+        required: true
+      RUNS_ON:
+        type: string
+        required: false
+        default: ubuntu-latest
+        
+jobs:
+  build:
+    runs-on: ${{inputs.RUNS_ON}}
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v6.0.3
+
+      - name: .net setup
+        uses: ./.github/actions/dotnet-build
+        with:
+          DOTNET_VERSION: ${{inputs.DOTNET_VERSION}}
+          BUILD_CONFIGURATION: ${{inputs.BUILD_CONFIGURATION}}
+          APP_NAME: ${{inputs.APP_NAME}}
+          
+      - name: dotnet test
+        run: |
+          dotnet test ${{inputs.APP_NAME}}.slnx --configuration  Release \
+            --no-build \
+            --collect:"XPlat Code Coverage" 
+      - name: dotnet publish
+        run:
+          dotnet publish ${{inputs.APP_NAME}}/${{inputs.APP_NAME}}.csproj --no-build --configuration ${{inputs.BUILD_CONFIGURATION}} --output publish
+          
+      - name: upload build artifact
+        uses: actions/upload-artifact@v7.0.1
+        with:
+          name: ${{inputs.ARTIFACT_NAME}}
+          path: ./publish

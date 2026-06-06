@@ -1,0 +1,66 @@
+name: demo.yaml
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+env:
+#  build_configuration: Release
+#  APP_NAME: WebSample
+#  ARTIFACT_NAME: drop
+#  DOTNET_VERSION: '10.0.x'
+  name: 'abc'
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    steps:
+      - name: print out information
+        run: echo "$GITHUB_REF" "$GITHUB_REF_NAME"
+        
+  build:
+    needs: prepare
+    uses: ./.github/workflows/dotnet-ci-template.yaml
+    with:
+      DOTNET_VERSION: ${{vars.DOTNET_VERSION}} 
+      BUILD_CONFIGURATION: ${{vars.BUILD_CONFIGURATION}}
+      ARTIFACT_NAME: ${{vars.ARTIFACT_NAME}}
+      APP_NAME: ${{vars.APP_NAME}}
+      RUNS_ON: 'ubuntu-latest'
+      
+  deploy_QA:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: QA
+    if: github.ref_name == 'main'
+    steps:
+      - name: download artefact
+        uses: actions/download-artifact@v8.0.1
+        with:
+          # Artifact name
+          name: drop
+          # Destination path
+          path: ./artefacts
+      - name: deploy
+        run: |
+          echo port is "$PORT $KEY"
+        
+
+  deploy_SIT:
+    needs: deploy_QA
+    runs-on: ubuntu-latest
+    environment: SIT
+    if: github.ref_name == 'main'
+    steps:
+      - name: download artefact
+        uses: actions/download-artifact@v8.0.1
+        with:
+          # Artifact name
+          name: drop
+          # Destination path
+          path: ./artefacts
+      - name: deploy
+        run: |
+          echo port is "$PORT $KEY"
+  
