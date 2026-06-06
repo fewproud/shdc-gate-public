@@ -3,7 +3,7 @@ name: demo.yaml
 on:
   workflow_dispatch:
   push:
-    branches: [main]
+    branches: [main,workflow]
 
 env:
 #  build_configuration: Release
