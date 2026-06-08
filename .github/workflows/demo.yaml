@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: print out information
-        run: echo "$GITHUB_REF" "$GITHUB_REF_NAME"
+        run: echo2 "$GITHUB_REF" "$GITHUB_REF_NAME"
         
   build:
     needs: prepare
