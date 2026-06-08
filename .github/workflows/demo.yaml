@@ -18,6 +18,7 @@ env:
 jobs:
   prepare:
     runs-on: ubuntu-latest
+    continue-on-error: true
     steps:
       - name: print out information
         run: echo2 "$GITHUB_REF" "$GITHUB_REF_NAME"
