@@ -12,7 +12,7 @@ env:
 #  APP_NAME: WebSample
 #  ARTIFACT_NAME: drop
 #  DOTNET_VERSION: '10.0.x'
-  name: '456'
+  name: '7890'
   
 
 jobs:
@@ -53,7 +53,7 @@ jobs:
         echo "All PR validation jobs passed"
         
   deploy_QA:
-    needs: build
+    needs: pr-validation-result
     runs-on: ubuntu-latest
     environment: QA
     if: github.ref_name == 'main'
