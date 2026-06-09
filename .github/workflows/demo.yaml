@@ -35,9 +35,7 @@ jobs:
   pr-validation-result:
     name: pr-validation-result
     runs-on: ubuntu-latest
-    needs:
-      - prepare
-      - build
+    needs: [prepare,build]
     if: always()
     steps:
     - name: Check PR validation jobs
