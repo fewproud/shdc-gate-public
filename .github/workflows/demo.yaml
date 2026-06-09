@@ -12,7 +12,7 @@ env:
 #  APP_NAME: WebSample
 #  ARTIFACT_NAME: drop
 #  DOTNET_VERSION: '10.0.x'
-  name: 'abc'
+  name: '123'
 
 jobs:
   prepare:
@@ -20,6 +20,7 @@ jobs:
     steps:
       - name: print out information
         run: echo "$GITHUB_REF" "$GITHUB_REF_NAME"
+
         
   build:
     needs: prepare
@@ -30,7 +31,28 @@ jobs:
       ARTIFACT_NAME: ${{vars.ARTIFACT_NAME}}
       APP_NAME: ${{vars.APP_NAME}}
       RUNS_ON: 'ubuntu-latest'
-      
+
+  pr-validation-result:
+    name: pr-validation-result
+    runs-on: ubuntu-latest
+    needs:
+      - prepare
+      - build
+    if: always()
+    steps:
+    - name: Check PR validation jobs
+      shell: bash
+      run: |
+        if [ "${{ needs.prepare.result }}" != "success" ]; then
+          echo "prepare failed or was not successful"
+          exit 1
+        fi
+        if [ "${{ needs.build.result }}" != "success" ]; then
+          echo "build failed or was not successful"
+          exit 1
+        fi
+        echo "All PR validation jobs passed"
+        
   deploy_QA:
     needs: build
     runs-on: ubuntu-latest
