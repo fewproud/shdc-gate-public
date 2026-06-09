@@ -12,7 +12,7 @@ env:
 #  APP_NAME: WebSample
 #  ARTIFACT_NAME: drop
 #  DOTNET_VERSION: '10.0.x'
-  name: '7890'
+  name: '123'
   
 
 jobs:
