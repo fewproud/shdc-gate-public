@@ -69,7 +69,7 @@ jobs:
           path: ./artefacts
       - name: deploy
         run: |
-          echo port is "$PORT $KEY"
+          echo port is "${{vars.PORT}} ${{vars.KEY}}
         
 
   deploy_SIT:
@@ -87,7 +87,7 @@ jobs:
           path: ./artefacts
       - name: deploy
         run: |
-          echo port is "$PORT $KEY"
+          echo port is "${{vars.PORT}} ${{vars.KEY}}
 
   deploy_PROD:
     needs: pr-validation-result
@@ -104,5 +104,5 @@ jobs:
           path: ./artefacts
       - name: deploy
         run: |
-          echo port is "$PORT $KEY"
+          echo port is "${{vars.PORT}} ${{vars.KEY}}
   
