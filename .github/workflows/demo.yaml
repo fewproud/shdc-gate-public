@@ -53,7 +53,7 @@ jobs:
         echo "All PR validation jobs passed"
         
   deploy_QA:
-    needs: build
+    needs: pr-validation-result
     runs-on: ubuntu-latest
     environment: QA
     if: github.ref_name == 'main'
