@@ -13,7 +13,7 @@ env:
 #  ARTIFACT_NAME: drop
 #  DOTNET_VERSION: '10.0.x'
   name: '45678'
-  
+
 
 jobs:
   prepare:
@@ -91,7 +91,7 @@ jobs:
     needs: deploy_SIT
     runs-on: ubuntu-latest
     environment: PROD
-    if: github.ref_name == 'main' || (github.ref_type == 'tag' && startsWith(github.ref, 'refs/tags/release'))
+    if: github.ref_type == 'tag' && startsWith(github.ref, 'refs/tags/release')
     steps:
       - name: download artefact
         uses: actions/download-artifact@v8.0.1
